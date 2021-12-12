@@ -86,28 +86,29 @@ prob(packetSize) = (1-0.19-0.23-0.17)/(length(packetSize)-3);
 prob(64) = 0.19;
 prob(110) = 0.23;
 prob(1518) = 0.17;
-avgPacketSize = sum(prob(packetSize).*packetSize);
+avgPacketSize = sum(prob(packetSize).*packetSize)
 
 packetSizeVoip = 110:130;
 probVoip = zeros(1,130);
 probVoip(packetSizeVoip) = 1/length(packetSizeVoip);
-avgPacketSizeVoip = sum(probVoip(packetSizeVoip).*packetSizeVoip);
+avgPacketSizeVoip = sum(probVoip(packetSizeVoip).*packetSizeVoip)
 
-uData = C/(avgPacketSize*8);
-uVoip = C/(avgPacketSizeVoip*8);
+uData = C/(avgPacketSize*8)
+uVoip = C/(avgPacketSizeVoip*8)
 
 eData = 1/uData;
 eVoip = 1/uVoip;
 e2Data = 2/(uData^2);
 e2Voip = 2/(uVoip^2);
-lambdaVoip = 50.*n;
-rData = lambda*eData;
-rVoip = eVoip.*lambdaVoip;
-wVoip = ((((e2Voip.*lambdaVoip)+(e2Data*lambda)) ./ (2.*(1-rVoip))) +eVoip).*1e3;
-wData = ((((e2Voip.*lambdaVoip)+(e2Data*lambda)) ./ (2.*(1-rVoip).*(1-rVoip-rData))) +eData).*1e3;
-fprintf("n \t\t 10 \t\t\t 20 \t\t\t 30 \t\t\t 40 \n");
-fprintf("wVoip \t %d \t %d \t %d \t %d \n",wVoip);
-fprintf("wData \t %d \t %d \t %d \t %d \n",wData);
+wData = 0;
+wVoip = 0;
+
+    lambdaVoip = 50.*n
+    rData = lambda*uData;
+    rVoip = lambdaVoip.*uVoip
+
+end
+    
 
 %% functions
 
