@@ -109,6 +109,125 @@ fprintf("n \t\t 10 \t\t\t 20 \t\t\t 30 \t\t\t 40 \n");
 fprintf("wVoip \t %d \t %d \t %d \t %d \n",wVoip);
 fprintf("wData \t %d \t %d \t %d \t %d \n",wData);
 
+%% 2d
+clc
+lambda = 1500;
+C = 10;
+f = 1e4;
+P = 10000;
+N = 50;
+n = [10; 20; 30; 40];
+results = zeros(4,7);
+errors = zeros(4,7);
+for x = 1:length(n)
+    [sim,erro] = runSimulator3(lambda,C,f,P,N,n(x));
+    results(x,:) = sim;
+    errors(x,:) = erro;
+end
+tiledlayout(2,2)
+ax1 = nexttile;
+bar(ax1,n,results(:,2))
+title('average data packet delay')
+xlabel('queue size (Bytes)')
+ylabel('milliseconds')
+hold on
+er = errorbar(n,results(:,2),errors(:,2),errors(:,2));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
+ax2 = nexttile;
+bar(ax2,n,results(:,1))
+title('data packet loss')
+xlabel('queue size (Bytes)')
+ylabel('%')
+hold on
+er = errorbar(n,results(:,1),errors(:,1),errors(:,1));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
+ax3 = nexttile;
+bar(ax3,n,results(:,6))
+title('average Voip packet delay')
+xlabel('queue size (Bytes)')
+ylabel('milliseconds')
+hold on
+er = errorbar(n,results(:,6),errors(:,6),errors(:,6));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
+ax3 = nexttile;
+bar(ax3,n,results(:,5))
+title('Voip packet loss')
+xlabel('queue size (Bytes)')
+ylabel('%')
+hold on
+er = errorbar(n,results(:,5),errors(:,5),errors(:,5));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
+%% 2e
+clc
+lambda = 1500;
+C = 10;
+f = 1e4;
+P = 10000;
+N = 50;
+n = [10; 20; 30; 40];
+results = zeros(4,7);
+errors = zeros(4,7);
+for x = 1:length(n)
+    [sim,erro] = runSimulator4(lambda,C,f,P,N,n(x));
+    results(x,:) = sim;
+    errors(x,:) = erro;
+end
+tiledlayout(2,2)
+ax1 = nexttile;
+bar(ax1,n,results(:,2))
+title('average data packet delay')
+xlabel('queue size (Bytes)')
+ylabel('milliseconds')
+hold on
+er = errorbar(n,results(:,2),errors(:,2),errors(:,2));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
+ax2 = nexttile;
+bar(ax2,n,results(:,1))
+title('data packet loss')
+xlabel('queue size (Bytes)')
+ylabel('%')
+hold on
+er = errorbar(n,results(:,1),errors(:,1),errors(:,1));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
+ax3 = nexttile;
+bar(ax3,n,results(:,6))
+title('average Voip packet delay')
+xlabel('queue size (Bytes)')
+ylabel('milliseconds')
+hold on
+er = errorbar(n,results(:,6),errors(:,6),errors(:,6));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
+ax3 = nexttile;
+bar(ax3,n,results(:,5))
+title('Voip packet loss')
+xlabel('queue size (Bytes)')
+ylabel('%')
+hold on
+er = errorbar(n,results(:,5),errors(:,5),errors(:,5));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
 %% functions
 
 % run Simulator3
