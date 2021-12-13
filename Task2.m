@@ -17,7 +17,7 @@ tiledlayout(1,2)
 ax1 = nexttile;
 bar(ax1,n,results(:,2))
 title('average data packet delay')
-xlabel('n voip packets')
+xlabel('VoIP flows')
 ylabel('ms')
 hold on
 er = errorbar(n,results(:,2),errors(:,2),errors(:,2));
@@ -28,7 +28,7 @@ hold off
 ax2 = nexttile;
 bar(ax2,n,results(:,6))
 title('average Voip packet delay')
-xlabel('n voip packets')
+xlabel('VoIP flows')
 ylabel('ms')
 hold on
 er = errorbar(n,results(:,6),errors(:,6),errors(:,6));
@@ -55,7 +55,7 @@ tiledlayout(1,2)
 ax1 = nexttile;
 bar(ax1,n,results(:,2))
 title('average data packet delay')
-xlabel('n voip packets')
+xlabel('VoIP flows')
 ylabel('ms')
 hold on
 er = errorbar(n,results(:,2),errors(:,2),errors(:,2));
@@ -66,7 +66,7 @@ hold off
 ax2 = nexttile;
 bar(ax2,n,results(:,6))
 title('average Voip packet delay')
-xlabel('n voip packets')
+xlabel('VoIP flows')
 ylabel('ms')
 hold on
 er = errorbar(n,results(:,6),errors(:,6),errors(:,6));
@@ -128,7 +128,7 @@ tiledlayout(2,2)
 ax1 = nexttile;
 bar(ax1,n,results(:,2))
 title('average data packet delay')
-xlabel('queue size (Bytes)')
+xlabel('VoIP flows')
 ylabel('milliseconds')
 hold on
 er = errorbar(n,results(:,2),errors(:,2),errors(:,2));
@@ -139,7 +139,7 @@ hold off
 ax2 = nexttile;
 bar(ax2,n,results(:,1))
 title('data packet loss')
-xlabel('queue size (Bytes)')
+xlabel('VoIP flows')
 ylabel('%')
 hold on
 er = errorbar(n,results(:,1),errors(:,1),errors(:,1));
@@ -150,7 +150,7 @@ hold off
 ax3 = nexttile;
 bar(ax3,n,results(:,6))
 title('average Voip packet delay')
-xlabel('queue size (Bytes)')
+xlabel('VoIP flows')
 ylabel('milliseconds')
 hold on
 er = errorbar(n,results(:,6),errors(:,6),errors(:,6));
@@ -161,7 +161,7 @@ hold off
 ax3 = nexttile;
 bar(ax3,n,results(:,5))
 title('Voip packet loss')
-xlabel('queue size (Bytes)')
+xlabel('VoIP flows')
 ylabel('%')
 hold on
 er = errorbar(n,results(:,5),errors(:,5),errors(:,5));
@@ -188,7 +188,7 @@ tiledlayout(2,2)
 ax1 = nexttile;
 bar(ax1,n,results(:,2))
 title('average data packet delay')
-xlabel('queue size (Bytes)')
+xlabel('VoIP flows')
 ylabel('milliseconds')
 hold on
 er = errorbar(n,results(:,2),errors(:,2),errors(:,2));
@@ -199,7 +199,7 @@ hold off
 ax2 = nexttile;
 bar(ax2,n,results(:,1))
 title('data packet loss')
-xlabel('queue size (Bytes)')
+xlabel('VoIP flows')
 ylabel('%')
 hold on
 er = errorbar(n,results(:,1),errors(:,1),errors(:,1));
@@ -210,7 +210,7 @@ hold off
 ax3 = nexttile;
 bar(ax3,n,results(:,6))
 title('average Voip packet delay')
-xlabel('queue size (Bytes)')
+xlabel('VoIP flows')
 ylabel('milliseconds')
 hold on
 er = errorbar(n,results(:,6),errors(:,6),errors(:,6));
@@ -221,13 +221,74 @@ hold off
 ax3 = nexttile;
 bar(ax3,n,results(:,5))
 title('Voip packet loss')
-xlabel('queue size (Bytes)')
+xlabel('VoIP flows')
 ylabel('%')
 hold on
 er = errorbar(n,results(:,5),errors(:,5),errors(:,5));
 er.Color = [0 0 0];                            
 er.LineStyle = 'none';  
 hold off
+
+%% 2f
+clc
+lambda = 1500;
+C = 10;
+f = 1e4;
+P = 10000;
+N = 50;
+n = [10; 20; 30; 40];
+results = zeros(4,7);
+errors = zeros(4,7);
+for x = 1:length(n)
+    [sim,erro] = runSimulator4f(lambda,C,f,P,N,n(x));
+    results(x,:) = sim;
+    errors(x,:) = erro;
+end
+tiledlayout(2,2)
+ax1 = nexttile;
+bar(ax1,n,results(:,2))
+title('average data packet delay')
+xlabel('VoIP flows')
+ylabel('milliseconds')
+hold on
+er = errorbar(n,results(:,2),errors(:,2),errors(:,2));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
+ax2 = nexttile;
+bar(ax2,n,results(:,1))
+title('data packet loss')
+xlabel('VoIP flows')
+ylabel('%')
+hold on
+er = errorbar(n,results(:,1),errors(:,1),errors(:,1));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
+ax3 = nexttile;
+bar(ax3,n,results(:,6))
+title('average Voip packet delay')
+xlabel('VoIP flows')
+ylabel('milliseconds')
+hold on
+er = errorbar(n,results(:,6),errors(:,6),errors(:,6));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
+ax3 = nexttile;
+bar(ax3,n,results(:,5))
+title('Voip packet loss')
+xlabel('VoIP flows')
+ylabel('%')
+hold on
+er = errorbar(n,results(:,5),errors(:,5),errors(:,5));
+er.Color = [0 0 0];                            
+er.LineStyle = 'none';  
+hold off
+
 %% functions
 
 % run Simulator3
@@ -248,6 +309,19 @@ function [media,erro] = runSimulator4(lambda,C,f,P,N,n)
     m = zeros(10,7);
     for i = 1:N
     [PL , APD , MPD , TT, PLV , APDV , MPDV] = Simulator4(lambda,C,f,P,n);
+    m(i,:) = [PL,APD,MPD,TT,PLV,APDV,MPDV];
+    end
+    for k = 1:7
+        erro(k) = error(m(:,k),N);
+    end
+    media = mean(m);
+end
+
+% run Simulator4e
+function [media,erro] = runSimulator4f(lambda,C,f,P,N,n)
+    m = zeros(10,7);
+    for i = 1:N
+    [PL , APD , MPD , TT, PLV , APDV , MPDV] = Simulator4f(lambda,C,f,P,n);
     m(i,:) = [PL,APD,MPD,TT,PLV,APDV,MPDV];
     end
     for k = 1:7
